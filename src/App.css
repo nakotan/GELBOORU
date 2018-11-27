@@ -1,0 +1,30 @@
+.App {
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.test {
+  color: #282c34;
+}
+
+.Loop-Box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 3vmin);
+}
+
+.Loop {
+  animation: Loop-spin infinite 3s linear;
+  margin: 1rem;
+}
+
+@keyframes Loop-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
