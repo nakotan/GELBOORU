@@ -4587,6 +4587,13 @@ ignore@^4.0.6:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
   integrity sha512-cyFDKrqc/YdcWFniJhzI42+AzS+gNwmUzOSFcRCQYwySuBBBy/KjuxWLZ/FHEH6Moq1NizMOBWyTcv8O4OZIMg==
 
+image-downloader@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/image-downloader/-/image-downloader-3.4.1.tgz#987b356c1628ff06635debe1af1d56c77a828b2a"
+  integrity sha512-JG4mvFSOoJRxtlGV0IWnaTq0COZU/JVY3L0cMXOeE+vPwj4nGnHnoTZGCLGRhye5i0B60jWFXIe19gAf9YnPiQ==
+  dependencies:
+    request "^2.87.0"
+
 imagesloaded@^4.0.0:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/imagesloaded/-/imagesloaded-4.1.4.tgz#1376efcd162bb768c34c3727ac89cc04051f3cc7"

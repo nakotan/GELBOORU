@@ -6,7 +6,6 @@ import {
   Button
 } from 'reactstrap'
 import axios from 'axios'
-//import moment from 'moment'
 import Masonry from 'react-masonry-component'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,7 +24,7 @@ class App extends Component {
   state = {
     loading: false,
     page: 1,
-    tags: '',
+    tags: 'asuna_(sao)',
     posts: []
   }
 
@@ -41,7 +40,7 @@ class App extends Component {
     const clientHeight = document.documentElement.clientHeight
     const scrollTop = document.documentElement.scrollTop
     const scrollHeight = document.documentElement.scrollHeight
-    if (scrollTop + clientHeight >= scrollHeight) this.loadMore()
+    if (scrollTop + clientHeight >= scrollHeight - 10) this.loadMore()
   }
 
   onKeyPressText = (e) => {
@@ -76,10 +75,42 @@ class App extends Component {
     })
   }
 
+  download = () => {
+    if (this.state.posts.length < 1) return toast.error('검색된 이미지가 없습니다.')
+    const file = this.state.posts[0]
+    const directory = file.directory.replace(/\/+/g, '_')
+    const url = `http://localhost:3000/api/${directory}/${file.image}`
+    const link = document.createElement('a')
+    link.href = url
+    link.download = file.image
+    link.click()
+    toast.success('첫번째 이미지 다운로드 완료')
+  }
+
   getData = async () => {
+    /*
+    change: 1536139202
+    created_at: "Sat Jun 02 10:34:31 -0500 2018"
+    directory: "a7/07"
+    file_url: "https://simg3.gelbooru.com/images/a7/07/a707c39ad376480613cc5fe37c9d3017.png"
+    hash: "a707c39ad376480613cc5fe37c9d3017"
+    height: 5705
+    id: 4266163
+    image: "a707c39ad376480613cc5fe37c9d3017.png"
+    owner: "danbooru"
+    parent_id: null
+    rating: "q"
+    sample: true
+    sample_height: 1173
+    sample_width: 850
+    score: 23
+    source: "https://files.yande.re/image/a707c39ad376480613cc5fe37c9d3017/yande.re%20456201%20asuna_%28sword_art_online%29%20cait%20naked%20nipples%20sword_art_online.png"
+    tags: "1girl absurdres asuna_(sao) bangs blurry blush braid breasts brown_eyes brown_hair cait classroom collarbone depth_of_field desk hair_over_breasts highres indoors large_breasts long_hair looking_at_viewer navel nipples nude paid_reward parted_bangs parted_lips patreon_reward sidelocks solo sword_art_online thigh_gap"
+    width: 4134
+    */
     const { page, tags } = this.state
     const proxy = 'https://cors-anywhere.herokuapp.com/'
-    const url = `https://gelbooru.com/index.php?page=dapi&s=post&q=index&pid=${page}&tags=${tags}&json=1`
+    const url = `https://gelbooru.com/index.php?page=dapi&s=post&q=index&pid=${page}&tags=${tags}&limit=1&json=1`
     this.setState({
       loading: true
     }, async () => {
@@ -89,13 +120,17 @@ class App extends Component {
       data.map(i => {
         const post = []
         post.created = i.created_at
-        post.url = i.file_url
+        post.directory = i.directory
+        post.image = i.image
         this.setState({
-          loading: false,
           posts: [
             ...this.state.posts,
             post
           ]
+        }, () => {
+          setTimeout(() => {
+            this.setState({ loading: false })
+          }, 10000)
         })
       })
     })
@@ -121,7 +156,7 @@ class App extends Component {
           <Input
             autoFocus
             type='text'
-            value={this.state.inputText}
+            value={this.state.tags}
             placeholder='asuna_(sao)'
             onKeyPress={this.onKeyPressText}
             onChange={this.onChangeText}
@@ -151,12 +186,11 @@ class App extends Component {
             {posts.map((item) => {
               return (
                 <a
-                  href={item.url}
-                  target='_blank'
+                  href={`https://simg3.gelbooru.com/images/${item.directory}/${item.image}`}
                 >
                   <img
-                    src={item.url}
-                    style={{ width: '200px', marginBottom: '5px' }}
+                    src={`https://simg3.gelbooru.com/images/${item.directory}/${item.image}`}
+                    style={{ width: '20px', marginBottom: '5px' }}
                     onError={(e) => e.target.style = 'display: none'}
                   />
                 </a>
@@ -169,6 +203,12 @@ class App extends Component {
             <FontAwesomeIcon className='Loop' icon='asterisk' />
           </div>
         ) : ''}
+        <Button
+          color='primary'
+          onClick={this.download}
+        >
+          테스트
+        </Button>
         <ToastContainer
           position='top-center'
           autoClose={2000}
